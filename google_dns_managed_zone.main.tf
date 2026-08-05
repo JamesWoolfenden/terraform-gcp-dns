@@ -1,7 +1,12 @@
 resource "google_dns_managed_zone" "main" {
   name        = var.zone_name
   dns_name    = var.dns_name
-  description = "Managed by terraform-gcp-dns"
+  description = var.description
+  labels      = var.labels
+
+  cloud_logging_config {
+    enable_logging = var.enable_query_logging
+  }
 
   dnssec_config {
     state = "on"

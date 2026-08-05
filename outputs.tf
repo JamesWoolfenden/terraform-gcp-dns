@@ -7,3 +7,8 @@ output "name_servers" {
   value       = google_dns_managed_zone.main.name_servers
   description = "Authoritative name servers for the zone"
 }
+
+output "record_set_names" {
+  value       = [for r in google_dns_record_set.records : r.name]
+  description = "Names of the DNS record sets created in the zone"
+}

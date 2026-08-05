@@ -1,0 +1,41 @@
+{
+  "scan_date": "2026-08-05T00:00:00Z",
+  "scan_path": ".",
+  "findings": [
+    {
+      "id": "HOLDEN_BP_001",
+      "status": "fixed",
+      "first_seen": "2026-08-05",
+      "last_seen": "2026-08-05",
+      "principle": "maintainability",
+      "severity": "LOW",
+      "confidence": "high",
+      "title": "google_dns_managed_zone_iam_member for_each key is derived from list index, not stable content",
+      "file": "google_dns_managed_zone_iam_member.binding.tf",
+      "line": 2,
+      "resource": "google_dns_managed_zone_iam_member.members",
+      "explanation": "The for_each key `\"${idx}-${m.role}\"` embeds the list position of each var.iam_members entry. Inserting, removing, or reordering an entry anywhere before the end of the list shifts every subsequent entry's index, so Terraform plans a destroy-and-recreate for every IAM binding after the change point, not just the one that actually changed. For an IAM binding this is a real operational cost: each affected principal's DNS role grant is briefly revoked and re-granted on apply. holden's existing HLD_TF_053/HLD_TF_075 catch count/count.index patterns but not an index variable embedded in a for_each key's own map-comprehension, so this didn't surface in the deterministic scan. This module has no released version yet, so fixing it now avoids ever shipping the fragile key to a consumer with real state.",
+      "remediation": "Key on stable content instead of position, e.g. `\"${m.role}-${m.member}\"` (unique per role+member pair, and reordering var.iam_members no longer changes any resource's identity).",
+      "fixable": true,
+      "fix": "  for_each = { for m in var.iam_members : \"${m.role}-${m.member}\" => m }\n"
+    },
+    {
+      "id": "HOLDEN_BP_002",
+      "status": "fixed",
+      "first_seen": "2026-08-05",
+      "last_seen": "2026-08-05",
+      "principle": "repeatability",
+      "severity": "LOW",
+      "confidence": "high",
+      "title": "example/examplea/.terraform.lock.hcl exists on disk but has never been committed",
+      "file": "example/examplea/.terraform.lock.hcl",
+      "line": 1,
+      "resource": "example/examplea (deployable root config)",
+      "explanation": "example/examplea is a deployable root config (it runs terraform init/plan directly, unlike the reusable module root) and its provider requirement is pinned to an exact version (7.31.0) in terraform.tf, but the resulting .terraform.lock.hcl is untracked (git status shows it as ?? and .gitignore has no rule that would exclude it). Without the lock file in version control, a fresh checkout or CI run can resolve a different provider build (different hash/architecture entry) than whichever machine last ran init, defeating the point of pinning the version. Sibling modules in this same set (terraform-gcp-storage, terraform-gcp-secret-manager) commit this file for exactly this reason.",
+      "remediation": "git add example/examplea/.terraform.lock.hcl and commit it alongside the rest of the example.",
+      "fixable": true,
+      "fix": null
+    }
+  ],
+  "suggested_policies": []
+}
