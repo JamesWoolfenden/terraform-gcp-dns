@@ -34,6 +34,12 @@ module "dns" {
       type    = "CAA"
       ttl     = 3600
       rrdatas = ["0 issue \"letsencrypt.org\""]
+    },
+    {
+      name    = "_dmarc.holden-test.example.com."
+      type    = "TXT"
+      ttl     = 300
+      rrdatas = ["\"v=DMARC1; p=reject; rua=mailto:dmarc-reports@holden-test.example.com\""]
     }
   ]
 
