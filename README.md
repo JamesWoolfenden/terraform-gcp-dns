@@ -78,9 +78,9 @@ No modules.
 | <a name="input_description"></a> [description](#input\_description) | Description of the managed zone | `string` | `"Managed by terraform-gcp-dns"` | no |
 | <a name="input_dns_name"></a> [dns\_name](#input\_dns\_name) | DNS name of the managed zone, e.g. example.com. | `string` | n/a | yes |
 | <a name="input_enable_query_logging"></a> [enable\_query\_logging](#input\_enable\_query\_logging) | Enable Cloud Logging for DNS queries served by this zone | `bool` | `true` | no |
-| <a name="input_iam_members"></a> [iam\_members](#input\_iam\_members) | IAM members granted access to the managed zone, e.g. { role = "roles/dns.reader", member = "serviceAccount:sa@project.iam.gserviceaccount.com" } | <pre>list(object({<br/>  role   = string<br/>  member = string<br/>}))</pre> | `[]` | no |
+| <a name="input_iam_members"></a> [iam\_members](#input\_iam\_members) | IAM members granted access to the managed zone, e.g. { role = "roles/dns.reader", member = "serviceAccount:sa@project.iam.gserviceaccount.com" } | <pre>list(object({<br/>    role   = string<br/>    member = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the managed zone | `map(string)` | `{}` | no |
-| <a name="input_records"></a> [records](#input\_records) | DNS record sets to create in the zone. name may be relative ("www") or fully-qualified ("www.example.com."); relative names are anchored to var.dns\_name. | <pre>list(object({<br/>  name    = string<br/>  type    = string<br/>  ttl     = number<br/>  rrdatas = list(string)<br/>}))</pre> | `[]` | no |
+| <a name="input_records"></a> [records](#input\_records) | DNS record sets to create in the zone. name may be relative ("www") or fully-qualified ("www.example.com."); relative names are anchored to var.dns\_name. | <pre>list(object({<br/>    name    = string<br/>    type    = string<br/>    ttl     = number<br/>    rrdatas = list(string)<br/>  }))</pre> | `[]` | no |
 | <a name="input_zone_name"></a> [zone\_name](#input\_zone\_name) | Name of the Cloud DNS managed zone | `string` | n/a | yes |
 
 ## Outputs

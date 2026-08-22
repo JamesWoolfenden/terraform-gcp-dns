@@ -1,46 +1,52 @@
 {
-  "scan_date": "2026-08-16T00:00:00Z",
-  "scan_path": ".",
   "findings": [
     {
-      "id": "HOLDEN_AI_001",
-      "status": "fixed",
-      "first_seen": "2026-08-04",
-      "last_seen": "2026-08-16",
-      "suppression_reason": null,
-      "principle": "network-security",
-      "severity": "MEDIUM",
       "confidence": "high",
-      "title": "Example zone has no CAA record restricting certificate issuance for holden-test.example.com.",
+      "explanation": "Fixed: a CAA record entry was added to the example's records list. The two policies this motivated (SPF permissive-\"all\", CAA-required) shipped as HLD_GCP_471 and HLD_GCP_472, merged to JamesWoolfenden/holden main. A separate, real engine gap surfaced along the way (each.value-derived for_each attributes always evaluated Unknown, regardless of whether the source list was statically known) and was fixed at the evaluator/parser level (whole-instance fanned-resource synthesis) rather than left as a permanent suppression \u2014 verified end-to-end: this module's example now scans with 0 unknown, 0 failed.",
       "file": "example/examplea/module.dns.tf",
-      "line": 32,
-      "resource": "module.dns (google_dns_managed_zone.main)",
-      "related_resources": ["google_dns_managed_zone.main", "google_dns_record_set.records"],
-      "explanation": "Fixed: a CAA record entry was added to the example's records list. The two policies this motivated (SPF permissive-\"all\", CAA-required) shipped as HLD_GCP_471 and HLD_GCP_472, merged to JamesWoolfenden/holden main. A separate, real engine gap surfaced along the way (each.value-derived for_each attributes always evaluated Unknown, regardless of whether the source list was statically known) and was fixed at the evaluator/parser level (whole-instance fanned-resource synthesis) rather than left as a permanent suppression — verified end-to-end: this module's example now scans with 0 unknown, 0 failed.",
-      "remediation": "Already applied.",
+      "first_seen": "2026-08-04",
+      "fix": "Already applied.",
       "fixable": true,
-      "fix": "Already applied."
+      "id": "HOLDEN_AI_001",
+      "last_seen": "2026-08-16",
+      "line": 32,
+      "principle": "network-security",
+      "related_resources": [
+        "google_dns_managed_zone.main",
+        "google_dns_record_set.records"
+      ],
+      "remediation": "Already applied.",
+      "resource": "module.dns (google_dns_managed_zone.main)",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "suppression_reason": null,
+      "title": "Example zone has no CAA record restricting certificate issuance for holden-test.example.com."
     },
     {
-      "id": "HOLDEN_AI_002",
-      "status": "fixed",
-      "first_seen": "2026-08-16",
-      "last_seen": "2026-08-16",
-      "suppression_reason": null,
-      "principle": "network-security",
-      "severity": "MEDIUM",
       "confidence": "high",
-      "title": "Example zone publishes an MX record and a hard-fail SPF record but no DMARC record",
+      "explanation": "Fixed: a DMARC record entry was added to the example's records list. The motivated policy (SPF-requires-DMARC-companion) surfaced a real engine bug along the way: checkCompanion/checkForbidsCompanion unconditionally excluded a candidate whose graph-resource ID matched the subject's \u2014 correct for an ordinary resource, but wrong for a for_each-fanned one, where SPF and DMARC are two instances of the *same* records variable collapsing into the *same* google_dns_record_set.records graph node, so the DMARC instance was always excluded as a 'self-match'. Fixed at the evaluator level (self-exclusion now only applies when the resource isn't for_each-fanned). Also simplified the policy itself mid-review: the original where-clause checked both name matches ^_dmarc\\. and rrdatas contains v=DMARC1, but name is built via a ternary (endswith(each.value.name, \".\") ? ... : \"...\") rather than a bare each.value.X reference, so it stays unresolvable per-instance regardless of the self-match fix \u2014 dropping the name check (rrdatas containing the literal, unambiguous v=DMARC1 tag is already a sufficient signal on its own) sidesteps that gap entirely rather than chasing it. Verified end-to-end: example now scans with 0 unknown, 0 failed.",
       "file": "example/examplea/module.dns.tf",
-      "line": 26,
-      "resource": "module.dns (google_dns_record_set.records)",
-      "related_resources": ["google_dns_managed_zone.main", "google_dns_record_set.records"],
-      "explanation": "Fixed: a DMARC record entry was added to the example's records list. The motivated policy (SPF-requires-DMARC-companion) surfaced a real engine bug along the way: checkCompanion/checkForbidsCompanion unconditionally excluded a candidate whose graph-resource ID matched the subject's — correct for an ordinary resource, but wrong for a for_each-fanned one, where SPF and DMARC are two instances of the *same* records variable collapsing into the *same* google_dns_record_set.records graph node, so the DMARC instance was always excluded as a 'self-match'. Fixed at the evaluator level (self-exclusion now only applies when the resource isn't for_each-fanned). Also simplified the policy itself mid-review: the original where-clause checked both name matches ^_dmarc\\. and rrdatas contains v=DMARC1, but name is built via a ternary (endswith(each.value.name, \".\") ? ... : \"...\") rather than a bare each.value.X reference, so it stays unresolvable per-instance regardless of the self-match fix — dropping the name check (rrdatas containing the literal, unambiguous v=DMARC1 tag is already a sufficient signal on its own) sidesteps that gap entirely rather than chasing it. Verified end-to-end: example now scans with 0 unknown, 0 failed.",
-      "remediation": "Already applied.",
+      "first_seen": "2026-08-16",
+      "fix": "Already applied.",
       "fixable": true,
-      "fix": "Already applied."
+      "id": "HOLDEN_AI_002",
+      "last_seen": "2026-08-16",
+      "line": 26,
+      "principle": "network-security",
+      "related_resources": [
+        "google_dns_managed_zone.main",
+        "google_dns_record_set.records"
+      ],
+      "remediation": "Already applied.",
+      "resource": "module.dns (google_dns_record_set.records)",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "suppression_reason": null,
+      "title": "Example zone publishes an MX record and a hard-fail SPF record but no DMARC record"
     }
   ],
+  "scan_date": "2026-08-16T00:00:00Z",
+  "scan_path": ".",
   "suggested_policies": [],
   "suggested_suppressions": []
 }
