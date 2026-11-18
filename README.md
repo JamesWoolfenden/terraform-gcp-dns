@@ -98,6 +98,56 @@ Check out these related projects.
 
 - [terraform-aws-codecommit](https://github.com/jameswoolfenden/terraform-aws-codebuild) - Storing ones code
 
+## Role and Permissions
+
+<!-- BEGINNING OF PRE-COMMIT-PIKE DOCS HOOK -->
+The Terraform resource required is:
+
+```golang
+# apply role
+resource "google_project_iam_custom_role" "terraform_pike" {
+  project     = "pike-477416"
+  role_id     = "terraform_pike"
+  title       = "terraform_pike"
+  description = "A user with least privileges"
+  permissions = [
+    "dns.changes.create",
+    "dns.changes.get",
+    "dns.changes.list",
+    "dns.managedZones.create",
+    "dns.managedZones.delete",
+    "dns.managedZones.get",
+    "dns.managedZones.update",
+    "dns.resourceRecordSets.create",
+    "dns.resourceRecordSets.delete",
+    "dns.resourceRecordSets.get",
+    "dns.resourceRecordSets.list",
+    "dns.resourceRecordSets.update",
+    "iam.serviceAccounts.getIamPolicy",
+    "iam.serviceAccounts.setIamPolicy"
+  ]
+}
+
+# plan role
+resource "google_project_iam_custom_role" "terraform_pike_plan" {
+  project     = "pike-477416"
+  role_id     = "terraform_pike_plan"
+  title       = "terraform_pike_plan"
+  description = "A user with least privileges"
+  permissions = [
+    "dns.changes.get",
+    "dns.changes.list",
+    "dns.managedZones.get",
+    "dns.resourceRecordSets.get",
+    "dns.resourceRecordSets.list",
+    "iam.serviceAccounts.getIamPolicy"
+  ]
+}
+
+
+```
+<!-- END OF PRE-COMMIT-PIKE DOCS HOOK -->
+
 ## Help
 
 **Got a question?**
